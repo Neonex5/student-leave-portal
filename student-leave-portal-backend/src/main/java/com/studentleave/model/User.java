@@ -20,6 +20,8 @@ public class User {
     @Column(unique = true)
     private String usn; // Student identification number (e.g., 1RI23CS088)
 
+    private String password;
+
     public User() {}
 
     public User(String name, String role) {
@@ -38,4 +40,7 @@ public class User {
 
     public String getUsn() { return usn; }
     public void setUsn(String usn) { this.usn = usn; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 }

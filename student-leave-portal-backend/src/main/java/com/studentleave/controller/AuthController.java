@@ -24,6 +24,7 @@ public class AuthController {
         User newUser = new User();
         newUser.setName(request.getName());
         newUser.setRole(request.getRole().toUpperCase());
+        newUser.setPassword(request.getPassword()); // Save password
         
         // If it's a student, save the USN
         if ("STUDENT".equalsIgnoreCase(request.getRole())) {
@@ -50,18 +51,20 @@ public class AuthController {
                 Long id = Long.parseLong(request.getLoginId());
                 optionalUser = userRepository.findById(id);
             } catch (NumberFormatException e) {
-                // Not a numeric ID, and USN failed, so user not found
+                // Not a numeric ID, and USN failed
             }
         }
         
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            if (user.getName().equalsIgnoreCase(request.getName())) {
+            // Verify Name AND Password
+            if (user.getName().equalsIgnoreCase(request.getName()) && 
+                user.getPassword().equals(request.getPassword())) {
                 return ResponseEntity.ok(user);
             }
         }
         
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("{\"message\": \"Invalid Login ID/USN or Name.\"}");
+                .body("{\"message\": \"Invalid ID/USN, Name, or Password.\"}");
     }
 }

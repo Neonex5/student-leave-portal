@@ -14,12 +14,17 @@ public class AuthDto {
 
         private String usn; // Optional for teachers, required for students
 
+        @NotBlank(message = "Password is required")
+        private String password;
+
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
         public String getRole() { return role; }
         public void setRole(String role) { this.role = role; }
         public String getUsn() { return usn; }
         public void setUsn(String usn) { this.usn = usn; }
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
     }
 
     public static class LoginRequest {
@@ -29,9 +34,14 @@ public class AuthDto {
         @NotBlank(message = "Name is required")
         private String name;
 
+        @NotBlank(message = "Password is required")
+        private String password;
+
         public String getLoginId() { return loginId; }
         public void setLoginId(String loginId) { this.loginId = loginId; }
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
     }
 }

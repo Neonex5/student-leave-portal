@@ -2,8 +2,9 @@ import { useState } from 'react';
 
 export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
   const [isRegistering, setIsRegistering] = useState(false);
-  const [loginId, setLoginId] = useState(''); // Used for Login (can be numeric ID or USN)
+  const [loginId, setLoginId] = useState('');
   const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
   const [role, setRole] = useState('STUDENT');
   
   // USN Construction parts
@@ -25,7 +26,7 @@ export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
 
     try {
       if (isRegistering) {
-        const registrationData: any = { name, role };
+        const registrationData: any = { name, role, password };
         
         if (role === 'STUDENT') {
           registrationData.usn = `1RI${usnYear}${usnDept}${usnNum.padStart(3, '0')}`;
@@ -44,15 +45,16 @@ export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
         setSuccessMsg(`Registration successful! Your Login ID is: ${displayId}. Please save this!`);
         setIsRegistering(false);
         setLoginId(displayId.toString());
+        setPassword('');
       } else {
         const res = await fetch(`${API_URL}/api/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ loginId, name })
+          body: JSON.stringify({ loginId, name, password })
         });
         
         const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'Invalid Login ID or Name.');
+        if (!res.ok) throw new Error(data.message || 'Invalid Login credentials.');
         onLogin(data);
       }
     } catch (err: any) {
@@ -68,7 +70,7 @@ export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
         {isRegistering ? 'Create Account' : 'Welcome Back'}
       </h2>
       <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
-        {isRegistering ? 'Register to access the portal' : 'Enter your USN/ID and Name to login'}
+        {isRegistering ? 'Register to access the portal' : 'Enter your credentials to login'}
       </p>
       
       {error && <div style={{ color: '#ff6b6b', background: 'rgba(255,0,0,0.1)', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</div>}
@@ -87,6 +89,11 @@ export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
           <input type="text" required className="input-field" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Alice" />
         </div>
 
+        <div className="input-group" style={{ textAlign: 'left' }}>
+          <label>Password</label>
+          <input type="password" required className="input-field" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter password" />
+        </div>
+
         {isRegistering && (
           <>
             <div className="input-group" style={{ textAlign: 'left' }}>
@@ -101,8 +108,8 @@ export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
               <div className="input-group" style={{ textAlign: 'left' }}>
                 <label>USN Generation (1RI + Year + Dept + Num)</label>
                 <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-                  <input type="text" className="input-field" style={{ flex: 1 }} value={usnYear} onChange={e => setUsnYear(e.target.value.slice(0,2))} placeholder="Year (23)" />
-                  <input type="text" className="input-field" style={{ flex: 1 }} value={usnDept} onChange={e => setUsnDept(e.target.value.toUpperCase().slice(0,2))} placeholder="Dept (CS)" />
+                  <input type="text" className="input-field" style={{ flex: 1 }} value={usnYear} onChange={e => setUsnYear(e.target.value.slice(0,2))} placeholder="Year" />
+                  <input type="text" className="input-field" style={{ flex: 1 }} value={usnDept} onChange={e => setUsnDept(e.target.value.toUpperCase().slice(0,2))} placeholder="Dept" />
                   <input type="number" className="input-field" style={{ flex: 1.5 }} min="0" max="200" value={usnNum} onChange={e => setUsnNum(e.target.value)} placeholder="000-200" />
                 </div>
                 <p style={{ fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.5rem' }}>Preview: 1RI{usnYear}{usnDept}{usnNum.padStart(3, '0')}</p>
