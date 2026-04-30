@@ -1,0 +1,8 @@
+jdk-17.0.2/
+node_modules/
+.gradle/
+build/
+*.db
+.DS_Store
+.env
+.env.local

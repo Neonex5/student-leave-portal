@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: student-leave-backend
+    env: docker
+    region: ohio
+    plan: free
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
+    port: 8080
