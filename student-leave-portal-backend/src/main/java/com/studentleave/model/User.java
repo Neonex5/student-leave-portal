@@ -17,6 +17,9 @@ public class User {
     @NotBlank(message = "Role cannot be empty")
     private String role; // "STUDENT" or "APPROVER"
 
+    @Column(unique = true)
+    private String usn; // Student identification number (e.g., 1RI23CS088)
+
     public User() {}
 
     public User(String name, String role) {
@@ -32,4 +35,7 @@ public class User {
     
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public String getUsn() { return usn; }
+    public void setUsn(String usn) { this.usn = usn; }
 }

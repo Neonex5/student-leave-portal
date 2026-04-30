@@ -12,21 +12,25 @@ public class AuthDto {
         @NotBlank(message = "Role is required (STUDENT or APPROVER)")
         private String role;
 
+        private String usn; // Optional for teachers, required for students
+
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
         public String getRole() { return role; }
         public void setRole(String role) { this.role = role; }
+        public String getUsn() { return usn; }
+        public void setUsn(String usn) { this.usn = usn; }
     }
 
     public static class LoginRequest {
-        @NotNull(message = "ID is required")
-        private Long id;
+        @NotBlank(message = "Login ID or USN is required")
+        private String loginId;
         
         @NotBlank(message = "Name is required")
         private String name;
 
-        public Long getId() { return id; }
-        public void setId(Long id) { this.id = id; }
+        public String getLoginId() { return loginId; }
+        public void setLoginId(String loginId) { this.loginId = loginId; }
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
     }

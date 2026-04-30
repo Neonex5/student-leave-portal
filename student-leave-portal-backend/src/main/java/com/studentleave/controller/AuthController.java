@@ -21,11 +21,17 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody AuthDto.RegisterRequest request) {
-        // Simple registration: just create a new User. 
-        // In a real app we'd check for duplicates or use passwords.
         User newUser = new User();
         newUser.setName(request.getName());
         newUser.setRole(request.getRole().toUpperCase());
+        
+        // If it's a student, save the USN
+        if ("STUDENT".equalsIgnoreCase(request.getRole())) {
+            if (request.getUsn() == null || request.getUsn().isBlank()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\": \"USN is required for students.\"}");
+            }
+            newUser.setUsn(request.getUsn().toUpperCase());
+        }
         
         User savedUser = userRepository.save(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
@@ -33,18 +39,29 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody AuthDto.LoginRequest request) {
-        Optional<User> optionalUser = userRepository.findById(request.getId());
+        Optional<User> optionalUser;
+        
+        // Try searching by USN first
+        optionalUser = userRepository.findByUsn(request.getLoginId().toUpperCase());
+        
+        // If not found by USN, try searching by numeric ID (for teachers)
+        if (optionalUser.isEmpty()) {
+            try {
+                Long id = Long.parseLong(request.getLoginId());
+                optionalUser = userRepository.findById(id);
+            } catch (NumberFormatException e) {
+                // Not a numeric ID, and USN failed, so user not found
+            }
+        }
         
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            // Verify that the ID matches the Name exactly (case insensitive for UX)
             if (user.getName().equalsIgnoreCase(request.getName())) {
                 return ResponseEntity.ok(user);
             }
         }
         
-        // If not found or name doesn't match
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("{\"message\": \"Invalid ID or Name. Please check your credentials.\"}");
+                .body("{\"message\": \"Invalid Login ID/USN or Name.\"}");
     }
 }
