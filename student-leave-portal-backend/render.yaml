@@ -7,3 +7,11 @@ services:
     dockerContext: .
     dockerfilePath: ./Dockerfile
     port: 8080
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: DATABASE_DRIVER
+        value: org.postgresql.Driver
+      - key: DATABASE_DIALECT
+        value: org.hibernate.dialect.PostgreSQLDialect
+
