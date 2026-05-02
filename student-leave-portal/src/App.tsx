@@ -15,7 +15,11 @@ function App() {
       <div className="app-container">
         {user && (
           <nav className="navbar">
-            <h1 className="gradient-text" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>LeavePortal</h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <img src="/logo.png" alt="Logo" style={{ height: '32px', borderRadius: '6px' }} />
+              <h1 className="gradient-text" style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: 0 }}>LeavePortal</h1>
+            </div>
+
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
               <span style={{ color: 'var(--text-muted)' }}>Hello, {user.name}</span>
               <button className="btn btn-secondary" onClick={handleLogout}>Logout</button>
