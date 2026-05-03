@@ -1,17 +1,19 @@
 :root {
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
-  --bg: #ffffff;
-  --surface: #f8fafc;
-  --surface-hover: #f1f5f9;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --border: #e2e8f0;
+  --primary: #b5b59c;
+  --primary-hover: #9f9f86;
+  --bg: #f5f5dc;
+  --surface: #f7f7f2;
+  --surface-hover: #efefea;
+  --text-main: #3a3a34;
+  --text-muted: #7c7c72;
+  --border: #d1d1c2;
   
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
+  --success: #889e81;
+  --warning: #d9b88e;
+  --danger: #b58383;
 }
+
+
 
 
 * {
@@ -30,19 +32,18 @@ body {
 
 /* Premium Layout Utilities */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(58, 58, 52, 0.1), 0 8px 10px -6px rgba(58, 58, 52, 0.1);
 }
 
 
 .gradient-text {
-  background: linear-gradient(to right, #818cf8, #c084fc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text-main);
+  font-weight: 700;
 }
+
 
 /* Buttons */
 .btn {
@@ -101,13 +102,15 @@ body {
 .input-field {
   width: 100%;
   padding: 10px 14px;
-  border-radius: 8px;
-  background-color: var(--bg);
+  border-radius: 6px;
+  background-color: var(--surface);
   border: 1px solid var(--border);
   color: var(--text-main);
   font-family: inherit;
-  transition: border-color 0.2s;
+  font-size: 0.95rem;
+  transition: all 0.2s;
 }
+
 
 .input-field:focus {
   border-color: var(--primary);

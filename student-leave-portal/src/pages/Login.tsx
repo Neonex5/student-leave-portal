@@ -66,12 +66,10 @@ export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
 
   return (
     <div className="glass-panel animate-fade-in" style={{ maxWidth: '400px', margin: '10vh auto', padding: '2.5rem', textAlign: 'center' }}>
-      <h2 style={{ marginBottom: '1rem' }} className="gradient-text">
-        {isRegistering ? 'Create Account' : 'Welcome Back'}
-      </h2>
       <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
-        {isRegistering ? 'Register to access the portal' : 'Enter your credentials to login'}
+        {isRegistering ? 'Register to access the portal' : 'Enter your USN and credentials to login'}
       </p>
+
       
       {error && <div style={{ color: '#ff6b6b', background: 'rgba(255,0,0,0.1)', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</div>}
       {successMsg && <div style={{ color: '#51cf66', background: 'rgba(0,255,0,0.1)', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.9rem' }}>{successMsg}</div>}
@@ -79,9 +77,10 @@ export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
         {!isRegistering && (
           <div className="input-group" style={{ textAlign: 'left' }}>
-            <label>USN or Login ID</label>
-            <input type="text" required className="input-field" value={loginId} onChange={e => setLoginId(e.target.value)} placeholder="e.g. 1RI23CS088 or 1" />
+            <label>USN</label>
+            <input type="text" required className="input-field" value={loginId} onChange={e => setLoginId(e.target.value)} placeholder="e.g. 1RI23CS001" />
           </div>
+
         )}
 
         <div className="input-group" style={{ textAlign: 'left' }}>
@@ -126,10 +125,11 @@ export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
       <div style={{ marginTop: '2rem', fontSize: '0.9rem' }}>
         <button 
           onClick={() => { setIsRegistering(!isRegistering); setError(''); setSuccessMsg(''); }} 
-          style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', textDecoration: 'underline' }}
+          style={{ background: 'none', border: 'none', color: 'var(--text-main)', cursor: 'pointer', textDecoration: 'underline', fontWeight: '500' }}
         >
           {isRegistering ? 'Already have an account? Login here.' : "Don't have an account? Register here."}
         </button>
+
       </div>
     </div>
   );
