@@ -31,8 +31,15 @@ public class AuthController {
             if (request.getUsn() == null || request.getUsn().isBlank()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\": \"USN is required for students.\"}");
             }
+            
+            // Check if USN already exists
+            if (userRepository.findByUsn(request.getUsn().toUpperCase()).isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\": \"Already registered with this USN.\"}");
+            }
+
             newUser.setUsn(request.getUsn().toUpperCase());
         }
+
         
         User savedUser = userRepository.save(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
@@ -45,24 +52,29 @@ public class AuthController {
         // Try searching by USN first
         optionalUser = userRepository.findByUsn(request.getLoginId().toUpperCase());
         
-        // If not found by USN, try searching by numeric ID (for teachers)
+        // If not found by USN, try searching by numeric ID
         if (optionalUser.isEmpty()) {
             try {
                 Long id = Long.parseLong(request.getLoginId());
                 optionalUser = userRepository.findById(id);
             } catch (NumberFormatException e) {
-                // Not a numeric ID, and USN failed
+                // Not a numeric ID
             }
+        }
+        
+        // If still not found, try searching by Name (for Teachers who don't enter an ID)
+        if (optionalUser.isEmpty()) {
+            optionalUser = userRepository.findByName(request.getName());
         }
         
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            // Verify Name AND Password
-            if (user.getName().equalsIgnoreCase(request.getName()) && 
-                user.getPassword().equals(request.getPassword())) {
+            // Verify Password
+            if (user.getPassword().equals(request.getPassword())) {
                 return ResponseEntity.ok(user);
             }
         }
+
         
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body("{\"message\": \"Invalid ID/USN, Name, or Password.\"}");

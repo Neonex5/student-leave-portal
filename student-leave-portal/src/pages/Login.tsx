@@ -75,13 +75,21 @@ export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
       {successMsg && <div style={{ color: '#51cf66', background: 'rgba(0,255,0,0.1)', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.9rem' }}>{successMsg}</div>}
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-        {!isRegistering && (
+        <div className="input-group" style={{ textAlign: 'left' }}>
+          <label>I am a</label>
+          <select className="input-field" value={role} onChange={e => setRole(e.target.value)}>
+            <option value="STUDENT">Student</option>
+            <option value="APPROVER">Teacher</option>
+          </select>
+        </div>
+
+        {!isRegistering && role === 'STUDENT' && (
           <div className="input-group" style={{ textAlign: 'left' }}>
             <label>USN</label>
             <input type="text" required className="input-field" value={loginId} onChange={e => setLoginId(e.target.value)} placeholder="e.g. 1RI23CS001" />
           </div>
-
         )}
+
 
         <div className="input-group" style={{ textAlign: 'left' }}>
           <label>Full Name</label>
@@ -93,29 +101,18 @@ export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
           <input type="password" required className="input-field" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter password" />
         </div>
 
-        {isRegistering && (
-          <>
-            <div className="input-group" style={{ textAlign: 'left' }}>
-              <label>Role</label>
-              <select className="input-field" value={role} onChange={e => setRole(e.target.value)}>
-                <option value="STUDENT">Student</option>
-                <option value="APPROVER">Teacher</option>
-              </select>
+        {isRegistering && role === 'STUDENT' && (
+          <div className="input-group" style={{ textAlign: 'left' }}>
+            <label>USN Generation (1RI + Year + Dept + Num)</label>
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+              <input type="text" className="input-field" style={{ flex: 1 }} value={usnYear} onChange={e => setUsnYear(e.target.value.slice(0,2))} placeholder="Year" />
+              <input type="text" className="input-field" style={{ flex: 1 }} value={usnDept} onChange={e => setUsnDept(e.target.value.toUpperCase().slice(0,2))} placeholder="Dept" />
+              <input type="number" className="input-field" style={{ flex: 1.5 }} min="0" max="200" value={usnNum} onChange={e => setUsnNum(e.target.value)} placeholder="000-200" />
             </div>
-
-            {role === 'STUDENT' && (
-              <div className="input-group" style={{ textAlign: 'left' }}>
-                <label>USN Generation (1RI + Year + Dept + Num)</label>
-                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-                  <input type="text" className="input-field" style={{ flex: 1 }} value={usnYear} onChange={e => setUsnYear(e.target.value.slice(0,2))} placeholder="Year" />
-                  <input type="text" className="input-field" style={{ flex: 1 }} value={usnDept} onChange={e => setUsnDept(e.target.value.toUpperCase().slice(0,2))} placeholder="Dept" />
-                  <input type="number" className="input-field" style={{ flex: 1.5 }} min="0" max="200" value={usnNum} onChange={e => setUsnNum(e.target.value)} placeholder="000-200" />
-                </div>
-                <p style={{ fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.5rem' }}>Preview: 1RI{usnYear}{usnDept}{usnNum.padStart(3, '0')}</p>
-              </div>
-            )}
-          </>
+            <p style={{ fontSize: '0.8rem', color: 'var(--primary)', marginTop: '0.5rem' }}>Preview: 1RI{usnYear}{usnDept}{usnNum.padStart(3, '0')}</p>
+          </div>
         )}
+
 
         <button type="submit" className="btn btn-primary" disabled={loading} style={{ marginTop: '0.5rem' }}>
           {loading ? 'Processing...' : (isRegistering ? 'Register' : 'Login')}
